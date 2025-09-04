@@ -13,7 +13,9 @@
 <!-- Categorieën -->
 <div class="filters">
     <?php
+
     // Categorieën handmatig definiëren omdat er geen centrale 'categories' tabel meer is
+
     $categories = [
         'laptops' => 'Laptops',
         'smartphones' => 'Smartphones',
@@ -28,36 +30,41 @@
 </div>
 
 <!-- Hier komen de producten -->
+
 <section class="products-grid" id="products-grid">
     <p style="text-align:center;">Kies een categorie om producten te bekijken.</p>
 </section>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const buttons = document.querySelectorAll('.filter-btn');
-        const productsGrid = document.getElementById('products-grid');
+   document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.filter-btn');
+    const productsGrid = document.getElementById('products-grid');
 
-        buttons.forEach(button => {
-            button.addEventListener('click', function () {
-                // Active knop styling
-                buttons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            buttons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
 
-                const categoryTable = this.getAttribute('data-category');
+            const categoryTable = this.getAttribute('data-category');
 
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', 'fetch_products.php?category=' + categoryTable, true);
-                xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        productsGrid.innerHTML = xhr.responseText;
-                    } else {
-                        productsGrid.innerHTML = '<p>Er is een fout opgetreden.</p>';
+            // Fetch request
+            fetch('fetch_products.php?category=' + categoryTable)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Netwerkfout');
                     }
-                };
-                xhr.send();
-            });
+                    return response.text();
+                })
+                .then(html => {
+                    productsGrid.innerHTML = html;
+                })
+                .catch(() => {
+                    productsGrid.innerHTML = '<p>Er is een fout opgetreden.</p>';
+                });
         });
     });
+});
+
 </script>
 
 </body>
