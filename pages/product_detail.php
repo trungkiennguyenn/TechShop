@@ -31,7 +31,6 @@ $stmt2 = $pdo->prepare("SELECT attribute, value FROM $detailsTable WHERE product
 $stmt2->execute([$id]);
 $details = $stmt2->fetchAll();
 
-// Voor terugknop
 $categoryParam = urlencode($category);
 ?>
 <!DOCTYPE html>
@@ -46,8 +45,6 @@ $categoryParam = urlencode($category);
 
 <body>
     <?php include '../includes/header.php'; ?>
-
-    <!-- Terug knop -->
     <div class="back-button-container">
         <a href="product.php?category=<?= $categoryParam ?>" class="back-btn">&larr; Terug naar
             <?= htmlspecialchars($category) ?></a>

@@ -38,18 +38,47 @@ if (!empty($_SESSION['cart'])) {
 ?>
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
     <meta charset="UTF-8">
     <title>Winkelwagen</title>
     <style>
-        body { background: #111; color: #f5f5f5; font-family: sans-serif; padding: 20px; }
-        h2 { text-align: center; color: #e50914; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        td, th { border: 1px solid #444; padding: 10px; text-align: center; }
-        th { background-color: #222; }
-        a { color: #e50914; text-decoration: none; }
+        body {
+            background: #111;
+            color: #f5f5f5;
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #e50914;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        td,
+        th {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #222;
+        }
+
+        a {
+            color: #e50914;
+            text-decoration: none;
+        }
     </style>
 </head>
+
 <body>
     <h2>Winkelwagen</h2>
     <?php if (empty($_SESSION['cart'])): ?>
@@ -77,4 +106,5 @@ if (!empty($_SESSION['cart'])) {
     <?php endif; ?>
     <p><a href="index.php">Verder winkelen</a></p>
 </body>
+
 </html>
