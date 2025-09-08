@@ -278,3 +278,7 @@ td a[href*="delete_product.php"]:hover {
 #deleteSelectedBtn:hover {
     background-color: #bb2d3b;
 }
+
+h1 {
+    text-align: center;
+}
