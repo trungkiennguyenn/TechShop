@@ -520,7 +520,7 @@ VALUES
         149.00,
         'https://m.media-amazon.com/images/G/01/kindle/journeys/WTN3CxScwzgi6KWIbtm8Xorm6sx50imat82FEiOH0xK83D/M2JiMjU1ZTYt._CB670552974_.jpg',
         '10.1" Full HD, octa-core, 3GB RAM.'
-    ),  
+    ),
     (
         'Lenovo Tab P11 Pro',
         499.00,

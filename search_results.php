@@ -1,4 +1,5 @@
 <?php
+require_once 'includes/header.php';
 require 'includes/connection.php';
 
 $query = $_GET['query'] ?? '';
@@ -37,8 +38,7 @@ foreach ($allowedTables as $table) {
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>+
-    <?php include 'includes/header.php'; ?>
+<body>
 
     <h1 style="text-align:center; margin:20px 0;">Zoekresultaten voor "<?= htmlspecialchars($query) ?>"</h1>
 

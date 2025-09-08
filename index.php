@@ -2,15 +2,14 @@
 require_once 'includes/header.php';
 require 'includes/connection.php';
 
-// Kies categorieën voor featured products (bijvoorbeeld de nieuwste 3)
 $featuredCategories = ['laptops', 'smartphones', 'televisies'];
 $featuredProducts = [];
 
 foreach ($featuredCategories as $category) {
-    $stmt = $pdo->query("SELECT * FROM $category ORDER BY id DESC LIMIT 1"); // nieuwste product per categorie
+    $stmt = $pdo->query("SELECT * FROM $category ORDER BY id DESC LIMIT 1");
     $product = $stmt->fetch();
     if ($product) {
-        $product['category'] = $category; // voeg categorie toe zodat we link kunnen maken
+        $product['category'] = $category;
         $featuredProducts[] = $product;
     }
 }
@@ -30,8 +29,6 @@ foreach ($featuredCategories as $category) {
 </head>
 
 <body>
-
-    <!-- Hero Section -->
     <section class="hero">
         <div>
             <h1>Welkom bij ElectroShop</h1>
@@ -40,7 +37,6 @@ foreach ($featuredCategories as $category) {
         </div>
     </section>
 
-    <!-- Promo Section -->
     <section class="promo-section">
         <div class="promo">
             <i class="fas fa-shipping-fast"></i>
@@ -64,7 +60,6 @@ foreach ($featuredCategories as $category) {
         </div>
     </section>
 
-    <!-- Featured Products -->
     <section class="featured-products">
         <h2 class="section-title">Aanbevolen producten</h2>
         <div class="products-grid" id="featured-products">
