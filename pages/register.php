@@ -30,9 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$username, $hashed]);
 
             $success = 'Registratie voltooid! Je kunt nu inloggen.';
-            // Optioneel: redirect naar login
-            // header('Location: login.php');
-            // exit;
         }
     }
 }

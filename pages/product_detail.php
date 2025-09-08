@@ -14,7 +14,8 @@ if (!in_array($category, $allowedTables) || !$id) {
 $stmt = $pdo->prepare("SELECT * FROM $category WHERE id = ?");
 $stmt->execute([$id]);
 $product = $stmt->fetch();
-if (!$product) exit('Product niet gevonden.');
+if (!$product)
+    exit('Product niet gevonden.');
 
 // Mapping categorie → details-tabel
 $detailTables = [
@@ -41,6 +42,7 @@ $userLoggedIn = isset($_SESSION['user_id']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($product['name']) ?> - ElectroShop</title>
     <link rel="stylesheet" href="../css/style.css">
+
 </head>
 
 <body>
@@ -58,7 +60,8 @@ $userLoggedIn = isset($_SESSION['user_id']);
     <?php endif; ?>
 
     <div class="back-button-container">
-        <a href="product.php?category=<?= $categoryParam ?>" class="back-btn">&larr; Terug naar <?= htmlspecialchars($category) ?></a>
+        <a href="product.php?category=<?= $categoryParam ?>" class="back-btn">&larr; Terug naar
+            <?= htmlspecialchars($category) ?></a>
     </div>
 
     <div class="product-detail-container">
@@ -72,12 +75,13 @@ $userLoggedIn = isset($_SESSION['user_id']);
                 <h3>Specificaties</h3>
                 <ul class="product-specs">
                     <?php foreach ($details as $detail): ?>
-                        <li><strong><?= htmlspecialchars($detail['attribute']) ?>:</strong> <?= htmlspecialchars($detail['value']) ?></li>
+                        <li><strong><?= htmlspecialchars($detail['attribute']) ?>:</strong>
+                            <?= htmlspecialchars($detail['value']) ?></li>
                     <?php endforeach; ?>
                 </ul>
 
-                <form method="post" action="add_to_cart.php" class="add-to-cart-form" 
-                      onsubmit="<?= $userLoggedIn ? '' : 'event.preventDefault(); showFailMessage();' ?>">
+                <form method="post" action="add_to_cart.php" class="add-to-cart-form"
+                    onsubmit="<?= $userLoggedIn ? '' : 'event.preventDefault(); showFailMessage();' ?>">
                     <input type="hidden" name="category" value="<?= htmlspecialchars($category) ?>">
                     <input type="hidden" name="id" value="<?= (int) $product['id'] ?>">
                     <label>

@@ -28,7 +28,7 @@ $username = $_SESSION['username'] ?? 'Gast';
             </div>
 
             <div class="profile-actions">
-                <a href="orders.php" class="action-card">
+                <a href="orders.php" class="action-card">i,
                     <i class="icon">📦</i>
                     <h3>Mijn bestellingen</h3>
                     <p>Bekijk je bestelgeschiedenis</p>

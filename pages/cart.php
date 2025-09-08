@@ -6,16 +6,16 @@ $cart = $_SESSION['cart'] ?? [];
 $total = 0;
 ?>
 
-
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
     <meta charset="UTF-8">
     <title>Winkelwagen</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
-<body>
 
+<body>
 
     <div class="cart-container">
         <h1>🛒 Jouw winkelwagen</h1>
@@ -38,22 +38,21 @@ $total = 0;
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($cart as $key => $item): 
+                    <?php foreach ($cart as $key => $item):
                         $lineTotal = $item['price'] * $item['quantity'];
                         $total += $lineTotal;
-                    ?>
-                    <tr>
-                        <td>
-                            <img src="<?= htmlspecialchars($item['image_url'] ?? '../img/no-image.png') ?>" 
-                                 alt="<?= htmlspecialchars($item['name']) ?>" 
-                                 class="cart-img">
-                        </td>
-                        <td><?= htmlspecialchars($item['name']) ?></td>
-                        <td><?= $item['quantity'] ?></td>
-                        <td>€<?= number_format($item['price'], 2, ',', '.') ?></td>
-                        <td>€<?= number_format($lineTotal, 2, ',', '.') ?></td>
-                        <td><a href="remove_from_cart.php?key=<?= $key ?>" class="remove-btn">Verwijder</a></td>
-                    </tr>
+                        ?>
+                        <tr>
+                            <td>
+                                <img src="<?= htmlspecialchars($item['image_url'] ?? '../img/no-image.png') ?>"
+                                    alt="<?= htmlspecialchars($item['name']) ?>" class="cart-img">
+                            </td>
+                            <td><?= htmlspecialchars($item['name']) ?></td>
+                            <td><?= $item['quantity'] ?></td>
+                            <td>€<?= number_format($item['price'], 2, ',', '.') ?></td>
+                            <td>€<?= number_format($lineTotal, 2, ',', '.') ?></td>
+                            <td><a href="remove_from_cart.php?key=<?= $key ?>" class="remove-btn">Verwijder</a></td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -68,4 +67,5 @@ $total = 0;
         <?php endif; ?>
     </div>
 </body>
+
 </html>
