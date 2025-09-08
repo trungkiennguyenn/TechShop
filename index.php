@@ -1,3 +1,21 @@
+<?php
+require_once 'includes/header.php';
+require 'includes/connection.php';
+
+// Kies categorieën voor featured products (bijvoorbeeld de nieuwste 3)
+$featuredCategories = ['laptops', 'smartphones', 'televisies'];
+$featuredProducts = [];
+
+foreach ($featuredCategories as $category) {
+    $stmt = $pdo->query("SELECT * FROM $category ORDER BY id DESC LIMIT 1"); // nieuwste product per categorie
+    $product = $stmt->fetch();
+    if ($product) {
+        $product['category'] = $category; // voeg categorie toe zodat we link kunnen maken
+        $featuredProducts[] = $product;
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="nl">
 
@@ -12,8 +30,6 @@
 </head>
 
 <body>
-
-    <?php include 'includes/header.php'; ?>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -52,31 +68,18 @@
     <section class="featured-products">
         <h2 class="section-title">Aanbevolen producten</h2>
         <div class="products-grid" id="featured-products">
-
-            <div class="product-card">
-                <img src="images/laptop1.jpg" alt="Laptop X">
-                <div class="product-info">
-                    <h3>Laptop X</h3>
-                    <p>€999,00</p>
-                    <a href="pages/product_detail.php?category=laptops&id=1">Bekijk</a>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="images/smartphone1.jpg" alt="Smartphone Y">
-                <div class="product-info">
-                    <h3>Smartphone Y</h3>
-                    <p>€599,00</p>
-                    <a href="pages/product_detail.php?category=smartphones&id=2">Bekijk</a>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="images/televisie1.jpg" alt="TV Z">
-                <div class="product-info">
-                    <h3>TV Z</h3>
-                    <p>€799,00</p>
-                    <a href="pages/product_detail.php?category=televisies&id=3">Bekijk</a>
-                </div>
-            </div>
+            <?php foreach ($featuredProducts as $p): ?>
+                <a href="pages/product_detail.php?category=<?= $p['category'] ?>&id=<?= $p['id'] ?>"
+                    class="product-card-link">
+                    <div class="product-card">
+                        <img src="<?= htmlspecialchars($p['image_url']) ?>" alt="<?= htmlspecialchars($p['name']) ?>">
+                        <div class="product-info">
+                            <h3><?= htmlspecialchars($p['name']) ?></h3>
+                            <p>€<?= number_format($p['price'], 2, ',', '.') ?></p>
+                        </div>
+                    </div>
+                </a>
+            <?php endforeach; ?>
         </div>
     </section>
 
@@ -87,7 +90,6 @@
         <div class="testimonial">"Goede service en fijne webshop!" - Mark V.</div>
     </section>
 
-    <!-- Footer -->
     <footer>
         &copy; <?= date('Y') ?> ElectroShop. Alle rechten voorbehouden.<br>
     </footer>
