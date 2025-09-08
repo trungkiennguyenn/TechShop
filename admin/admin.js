@@ -11,157 +11,100 @@ document.addEventListener('click', function (event) {
     }
 });
 
-// Products.php - Delete modal
-
 document.addEventListener("DOMContentLoaded", () => {
-    const deleteButtons = document.querySelectorAll(".delete-btn");
-    const modal = document.getElementById("deleteModal");
+    const deleteModal = document.getElementById("deleteModal");
     const modalText = document.getElementById("modalText");
-    const confirmDelete = document.getElementById("confirmDelete");
-    const cancelDelete = document.getElementById("cancelDelete");
+    const confirmDeleteBtn = document.getElementById("confirmDelete");
+    const cancelDeleteBtn = document.getElementById("cancelDelete");
     const successMessage = document.getElementById("successMessage");
-    let deleteUrl = "";
 
-    deleteButtons.forEach(btn => {
-        btn.addEventListener("click", (e) => {
+    const checkboxes = document.querySelectorAll(".select-product");
+    const deleteSelectedBtn = document.getElementById("deleteSelectedBtn");
+    const selectAll = document.getElementById("selectAll");
+
+    let deleteUrl = null;
+    let deleteRows = [];
+
+    function openModal(message, url, rows) {
+        modalText.textContent = message;
+        deleteUrl = url;
+        deleteRows = rows;
+        deleteModal.classList.add("show");
+    }
+
+    function closeModal() {
+        deleteModal.classList.remove("show");
+        deleteUrl = null;
+        deleteRows = [];
+    }
+
+    function updateDeleteButton() {
+        const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+        if (deleteSelectedBtn) deleteSelectedBtn.style.display = anyChecked ? "inline-block" : "none";
+    }
+
+    // Individueel verwijderen
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.addEventListener("click", e => {
             e.preventDefault();
-            deleteUrl = btn.dataset.url;
-            modalText.textContent = `Weet je zeker dat je "${btn.dataset.name}" wilt verwijderen?`;
-            modal.style.display = "flex";
+            const url = btn.dataset.url;
+            const id = btn.dataset.id;
+            const name = btn.dataset.name;
+
+            openModal(`Weet je zeker dat je "${name}" wilt verwijderen?`, url, [id]);
         });
     });
 
-    confirmDelete.addEventListener("click", () => {
+    // Meerdere verwijderen
+    if (deleteSelectedBtn) {
+        deleteSelectedBtn.addEventListener("click", () => {
+            const rows = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.dataset.id);
+
+            if (rows.length === 0) return;
+
+            const category = deleteSelectedBtn.dataset.category;
+            const url = `delete_product.php?category=${category}&ids=${rows.join(",")}`;
+
+            openModal(`Weet je zeker dat je deze ${rows.length} producten wilt verwijderen?`, url, rows);
+        });
+    }
+
+    // Confirm delete
+    confirmDeleteBtn.addEventListener("click", () => {
+        if (!deleteUrl || deleteRows.length === 0) return;
+
         fetch(deleteUrl)
             .then(res => res.ok ? res.text() : Promise.reject("Fout bij verwijderen"))
             .then(() => {
-                modal.style.display = "none";
                 successMessage.style.display = "block";
-                setTimeout(() => {
-                    location.reload(); // pagina vernieuwen
-                }, 1500);
+                setTimeout(() => successMessage.style.display = "none", 3000);
+
+                deleteRows.forEach(id => {
+                    const row = document.getElementById("productRow_" + id);
+                    if (row) row.remove();
+                });
+
+                updateDeleteButton();
+                closeModal();
             })
             .catch(err => alert(err));
     });
 
-    cancelDelete.addEventListener("click", () => {
-        modal.style.display = "none";
+    cancelDeleteBtn.addEventListener("click", closeModal);
+
+    window.addEventListener("click", e => {
+        if (e.target === deleteModal) closeModal();
     });
 
-    // Klik buiten modal sluit deze
-    window.addEventListener("click", (e) => {
-        if (e.target === modal) modal.style.display = "none";
-    });
-});
-
-// Delete Selected products
-
-document.addEventListener('DOMContentLoaded', () => {
-
-    const checkboxes = document.querySelectorAll('.select-product');
-    const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
-    const selectAll = document.getElementById('selectAll');
-    const successMessage = document.getElementById('successMessage');
-
-    const deleteModal = document.getElementById('deleteModal');
-    const modalText = document.getElementById('modalText');
-    const confirmDeleteBtn = document.getElementById('confirmDelete');
-    const cancelDeleteBtn = document.getElementById('cancelDelete');
-
-    let deleteUrl = null;
-    let deleteRows = []; // kan meerdere rijen bevatten voor geselecteerde items
-
-    // Update zichtbaarheid Delete Selected knop
-    function updateDeleteButton() {
-        const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
-        if (deleteSelectedBtn) deleteSelectedBtn.style.display = anyChecked ? 'inline-block' : 'none';
-    }
-
-    checkboxes.forEach(cb => cb.addEventListener('change', updateDeleteButton));
+    checkboxes.forEach(cb => cb.addEventListener("change", updateDeleteButton));
 
     if (selectAll) {
-        selectAll.addEventListener('change', () => {
+        selectAll.addEventListener("change", () => {
             const checked = selectAll.checked;
-            checkboxes.forEach(cb => cb.checked = checked);
+            checkboxes.forEach(cb => (cb.checked = checked));
             updateDeleteButton();
         });
     }
-
-    // Individuele delete knop - open modal
-    const deleteBtns = document.querySelectorAll('.delete-btn');
-    deleteBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            deleteUrl = btn.dataset.url;
-            deleteRows = [btn.dataset.id];
-
-            if (modalText) {
-                modalText.textContent = `Weet je zeker dat je "${btn.dataset.name}" wilt verwijderen?`;
-            }
-            if (deleteModal) deleteModal.style.display = 'block';
-        });
-    });
-
-    // Delete Selected - open dezelfde modal
-    if (deleteSelectedBtn) {
-        deleteSelectedBtn.addEventListener('click', () => {
-            deleteRows = Array.from(checkboxes)
-                .filter(cb => cb.checked)
-                .map(cb => cb.dataset.id);
-
-            if (deleteRows.length === 0) return;
-
-            const category = deleteSelectedBtn.dataset.category;
-            deleteUrl = `delete_product.php?category=${category}&ids=${deleteRows.join(',')}`;
-
-            if (modalText) {
-                modalText.textContent = `Weet je zeker dat je deze ${deleteRows.length} producten wilt verwijderen?`;
-            }
-            if (deleteModal) deleteModal.style.display = 'block';
-        });
-    }
-
-    // Bevestig verwijdering in modal
-    if (confirmDeleteBtn) {
-        confirmDeleteBtn.addEventListener('click', () => {
-            if (!deleteUrl || deleteRows.length === 0) return;
-
-            fetch(deleteUrl)
-                .then(() => {
-                    if (successMessage) {
-                        successMessage.style.display = 'block';
-                        setTimeout(() => successMessage.style.display = 'none', 3000);
-                    }
-                    deleteRows.forEach(id => {
-                        const row = document.getElementById('productRow_' + id);
-                        if (row) row.remove();
-                    });
-                    updateDeleteButton();
-                    deleteUrl = null;
-                    deleteRows = [];
-                    if (deleteModal) deleteModal.style.display = 'none';
-                })
-                .catch(err => console.error(err));
-        });
-    }
-
-    // Annuleer verwijdering
-    if (cancelDeleteBtn) {
-        cancelDeleteBtn.addEventListener('click', () => {
-            if (deleteModal) deleteModal.style.display = 'none';
-            deleteUrl = null;
-            deleteRows = [];
-        });
-    }
-
-    // Sluit modal bij click buiten
-    window.addEventListener('click', (e) => {
-        if (e.target === deleteModal) {
-            deleteModal.style.display = 'none';
-            deleteUrl = null;
-            deleteRows = [];
-        }
-    });
-
 });
-
