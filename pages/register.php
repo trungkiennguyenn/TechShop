@@ -15,16 +15,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($password !== $confirm) {
         $error = 'Wachtwoorden komen niet overeen.';
     } else {
+        // Controleer of gebruikersnaam al bestaat
         $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
         $stmt->execute([$username]);
 
         if ($stmt->fetch()) {
             $error = 'Gebruikersnaam is al in gebruik.';
         } else {
+            // Hash het wachtwoord
             $hashed = password_hash($password, PASSWORD_DEFAULT);
+
+            // Sla de gebruiker op
             $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
             $stmt->execute([$username, $hashed]);
-            $success = 'Registratie voltooid!';
+
+            $success = 'Registratie voltooid! Je kunt nu inloggen.';
+            // Optioneel: redirect naar login
+            // header('Location: login.php');
+            // exit;
         }
     }
 }
@@ -82,9 +90,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="POST">
         <h2>Registreren</h2>
         <?php if ($error): ?>
-            <p class="error"><?= htmlspecialchars($error) ?></p><?php endif; ?>
+            <p class="error"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
         <?php if ($success): ?>
-            <p class="success"><?= htmlspecialchars($success) ?></p><?php endif; ?>
+            <p class="success"><?= htmlspecialchars($success) ?></p>
+        <?php endif; ?>
         <input type="text" name="username" placeholder="Gebruikersnaam" required>
         <input type="password" name="password" placeholder="Wachtwoord" required>
         <input type="password" name="confirm_password" placeholder="Bevestig wachtwoord" required>

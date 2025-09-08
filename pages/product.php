@@ -1,3 +1,7 @@
+<?php
+require_once '../includes/header.php';
+?>
+
 <!DOCTYPE html>
 <html lang="nl">
 
@@ -9,8 +13,6 @@
 </head>
 
 <body>
-
-    <?php include '../includes/header.php'; ?>
 
     <section class="categories">
         <h2 class="section-title">Categorieën</h2>
