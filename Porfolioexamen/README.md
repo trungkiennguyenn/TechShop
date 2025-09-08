@@ -1,0 +1,1 @@
+De locatie van de bewijsmaterialen worden vermeld in de opdracht md files zelf, bijvoorbeeld links naar de video die te maken heeft met de opdracht of een link naar de github repository met de code zelf.
