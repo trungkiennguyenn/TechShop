@@ -91,4 +91,11 @@ if ($currentPage === 'search_results.php') {
         <?php endif; ?>
     </nav>
 
-<script src="js/header.js"></script>
+<?php
+
+// Checkt of we in de 'pages' map zitten
+$isInPages = strpos($_SERVER['PHP_SELF'], '/pages/') !== false;
+?>
+
+<script src="<?= $isInPages ? '../js/header.js' : 'js/header.js' ?>"></script>
+
