@@ -22,10 +22,11 @@ if (!isset($_SESSION['username']) || $_SESSION['username'] !== 'admin') {
 <body>
 
     <?php include 'adminheader.php'; ?>
-
     <main class="admin-dashboard">
-        <h1>Admin Dashboard</h1>
-        <p>Welkom terug, <strong><?= htmlspecialchars($_SESSION['username']) ?></strong>!</p>
+        <div class="admin-header">
+            <h1>Admin Dashboard</h1>
+            <p>Hello, <strong><?= htmlspecialchars($_SESSION['username']) ?></strong>!</p>
+        </div>
 
         <div class="admin-links">
             <a href="products.php">📋 Producten beheren</a>

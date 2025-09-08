@@ -10,8 +10,8 @@ if (!in_array($category, $categories)) {
     $category = 'tablets';
 }
 
-$status = '';       // voor statusmelding
-$status_type = '';  // 'success' of 'error'
+$success_message = '';
+$image_error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
@@ -20,37 +20,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $_POST['description'];
     $selected_category = $_POST['category'];
 
+    // Controleer categorie
     if (!in_array($selected_category, $categories)) {
-        $status = "Ongeldige categorie.";
-        $status_type = 'error';
+        $image_error = "Ongeldige categorie.";
+    }
+    // Controleer geldige URL
+    elseif (!filter_var($image_url, FILTER_VALIDATE_URL)) {
+        $image_error = "Ongeldige image URL";
     } else {
-        try {
-            $stmt = $pdo->prepare("INSERT INTO $selected_category (name, price, image_url, description) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$name, $price, $image_url, $description]);
-
-            $status = "Product succesvol toegevoegd aan '{$selected_category}'!";
-            $status_type = 'success';
-        } catch (Exception $e) {
-            $status = "Er is iets misgegaan. Product niet toegevoegd.";
-            $status_type = 'error';
+        // Controleer of URL naar afbeelding verwijst
+        $headers = @get_headers($image_url, 1);
+        $contentType = $headers['Content-Type'] ?? '';
+        if (is_array($contentType))
+            $contentType = $contentType[0];
+        if (strpos($contentType, 'image/') !== 0) {
+            $image_error = "Ongeldige image URL";
+        } else {
+            // Voeg product toe
+            try {
+                $stmt = $pdo->prepare("INSERT INTO $selected_category (name, price, image_url, description) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$name, $price, $image_url, $description]);
+                $success_message = "Product succesvol toegevoegd aan '{$selected_category}'!";
+                $image_error = '';
+                // Formulier resetten na succes
+                $_POST = [];
+            } catch (Exception $e) {
+                $image_error = "Er is iets misgegaan. Product niet toegevoegd.";
+            }
         }
     }
 }
 ?>
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
     <meta charset="UTF-8">
     <title>Nieuw product toevoegen</title>
-    <link rel="stylesheet" href="css/admin.css">
     <link rel="stylesheet" href="css/add.css">
+    <style>
+
+    </style>
 </head>
+
 <body>
-    <h1>Nieuw product toevoegen</h1>
     <div class="container">
-        <?php if ($status): ?>
-            <div class="status-box <?= $status_type ?>">
-                <?= htmlspecialchars($status) ?>
+        <h1>Nieuw product toevoegen</h1>
+
+        <?php if ($success_message): ?>
+            <div class="success-msg">
+                <?= htmlspecialchars($success_message) ?>
             </div>
         <?php endif; ?>
 
@@ -66,19 +85,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </label>
 
             <label>Naam:
-                <input type="text" name="name" required>
+                <input type="text" name="name" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" required>
             </label>
 
             <label>Prijs:
-                <input type="number" name="price" step="0.01" required>
+                <input type="number" name="price" step="0.01" value="<?= htmlspecialchars($_POST['price'] ?? '') ?>"
+                    required>
             </label>
 
             <label>Afbeeldings-URL:
-                <input type="text" name="image_url" required>
+                <input type="text" name="image_url" value="<?= htmlspecialchars($_POST['image_url'] ?? '') ?>" required>
+                <?php if ($image_error): ?>
+                    <span class="error-msg"><?= htmlspecialchars($image_error) ?></span>
+                <?php endif; ?>
             </label>
 
             <label>Beschrijving:
-                <textarea name="description" required></textarea>
+                <textarea name="description" required><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
             </label>
 
             <button type="submit">Toevoegen</button>
@@ -87,4 +110,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="dashboard.php" class="back-link">Terug</a>
     </div>
 </body>
+
 </html>

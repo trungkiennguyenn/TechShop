@@ -2,16 +2,15 @@
 include 'auth_admin.php';
 require '../includes/connection.php';
 
-// Bepaalt de categorie
-$category = $_GET['category'] ?? 'tablets';
+// Alle categorieën
+$categories = ['laptops', 'smartphones', 'televisies', 'tablets'];
 
-// Checkt of de categorie geldig is
-$validCategories = ['laptops', 'smartphones', 'televisies', 'tablets'];
-if (!in_array($category, $validCategories)) {
-    die("Ongeldige categorie.");
+$category = $_GET['category'] ?? 'tablets';
+if (!in_array($category, $categories)) {
+    $category = 'tablets';
 }
 
-// Haalt de producten op
+// Haal producten op
 $stmt = $pdo->query("SELECT * FROM $category ORDER BY id DESC");
 $products = $stmt->fetchAll();
 ?>
@@ -24,8 +23,6 @@ $products = $stmt->fetchAll();
     <title>Admin - <?= ucfirst($category) ?> Beheer</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="css/admin.css">
-
-
 </head>
 
 <body>
@@ -40,28 +37,57 @@ $products = $stmt->fetchAll();
         <a href="products.php?category=tablets">Tablets</a>
     </nav>
 
-    <table border="1" cellpadding="8" cellspacing="0">
-        <tr>
-            <th>ID</th>
-            <th>Naam</th>
-            <th>Prijs</th>
-            <th>Afbeelding</th>
-            <th>Acties</th>
-        </tr>
-        <?php foreach ($products as $p): ?>
+    <!-- Delete Selected knop, standaard verborgen -->
+    <button id="deleteSelectedBtn" data-category="<?= $category ?>" style="display:none;">🗑️ Delete Selected</button>
+
+    <!-- Succesmelding -->
+    <div id="successMessage" class="success-message" style="display:none;">
+        ✅ Product(en) succesvol verwijderd!
+    </div>
+
+    <table>
+        <thead>
             <tr>
-                <td><?= $p['id'] ?></td>
-                <td><?= htmlspecialchars($p['name']) ?></td>
-                <td>€<?= number_format($p['price'], 2, ',', '.') ?></td>
-                <td><img src="<?= htmlspecialchars($p['image_url']) ?>" width="80"></td>
-                <td>
-                    <a href="edit_product.php?category=<?= $category ?>&id=<?= $p['id'] ?>">✏️ Bewerken</a> |
-                    <a href="delete_product.php?category=<?= $category ?>&id=<?= $p['id'] ?>"
-                        onclick="return confirm('Weet je zeker dat je dit product wilt verwijderen?')">🗑️ Verwijderen</a>
-                </td>
+                <th><input type="checkbox" id="selectAll"></th>
+                <th>ID</th>
+                <th>Naam</th>
+                <th>Prijs</th>
+                <th>Afbeelding</th>
+                <th>Acties</th>
             </tr>
-        <?php endforeach; ?>
+        </thead>
+        <tbody>
+            <?php foreach ($products as $p): ?>
+                <tr id="productRow_<?= $p['id'] ?>">
+                    <td><input type="checkbox" class="select-product" data-id="<?= $p['id'] ?>"></td>
+                    <td><?= $p['id'] ?></td>
+                    <td><?= htmlspecialchars($p['name']) ?></td>
+                    <td>€<?= number_format($p['price'], 2, ',', '.') ?></td>
+                    <td><img src="<?= htmlspecialchars($p['image_url']) ?>" width="80"></td>
+                    <td>
+                        <a href="edit_product.php?category=<?= $category ?>&id=<?= $p['id'] ?>">✏️ Bewerken</a> |
+                        <a href="#" class="delete-btn"
+                            data-url="delete_product.php?category=<?= $category ?>&id=<?= $p['id'] ?>"
+                            data-id="<?= $p['id'] ?>" data-name="<?= htmlspecialchars($p['name']) ?>">🗑️ Verwijderen</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
     </table>
+
+    <!-- Modal voor individuele delete -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2>Product verwijderen</h2>
+            <p id="modalText"></p>
+            <div class="modal-actions">
+                <button id="confirmDelete" class="btn-danger">Verwijderen</button>
+                <button id="cancelDelete" class="btn-secondary">Annuleren</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
 </body>
 
 </html>

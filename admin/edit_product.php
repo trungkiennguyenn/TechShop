@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'];
     $image_url = $_POST['image_url'];
     $description = $_POST['description'];
-
+    
     $update = $pdo->prepare("UPDATE $category SET name=?, price=?, image_url=?, description=? WHERE id=?");
     $update->execute([$name, $price, $image_url, $description, $id]);
 
@@ -42,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Product bewerken</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/edit.css">
+
 </head>
 
 <body>
@@ -57,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 required><?= htmlspecialchars($product['description']) ?></textarea></label><br><br>
         <button type="submit">Opslaan</button>
     </form>
-    <a href="products.php?category=<?= $category ?>">⬅️ Terug</a>
+    <a href="products.php?category=<?= $category ?>">Terug</a>
 </body>
 
 </html>

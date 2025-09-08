@@ -30,17 +30,16 @@ if (session_status() === PHP_SESSION_NONE) {
 
         <div class="header-icons">
 
-
-
-            <div class="icon profile-icon" onclick="toggleProfileMenu()">
-                <i class="fas fa-user"></i>
-            </div>
-
             <?php if (basename($_SERVER['PHP_SELF']) !== 'dashboard.php'): ?>
                 <div class="back-to-dashboard">
                     <a href="dashboard.php" class="btn-back">Terug naar Dashboard</a>
                 </div>
             <?php endif; ?>
+
+            <div class="icon profile-icon" onclick="toggleProfileMenu()">
+                <i class="fas fa-user"></i>
+            </div>
+
 
             <div id="profile-menu" class="profile-menu hidden">
                 <?php if (isset($_SESSION['user_id'])): ?>
@@ -65,7 +64,6 @@ if (session_status() === PHP_SESSION_NONE) {
 
         </div>
     </header>
-
 
     <script src="admin.js"></script>
 </body>
