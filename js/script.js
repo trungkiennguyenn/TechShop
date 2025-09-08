@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // **Auto filter op basis van URL ?category=**
+    // Auto filter op basis van URL ?category=**
     const urlParams = new URLSearchParams(window.location.search);
     const categoryFromURL = urlParams.get('category');
     if (categoryFromURL && buttons.length) {
@@ -41,33 +41,37 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-document.getElementById('apply-price-filter').addEventListener('click', () => {
-    const min = parseFloat(document.getElementById('price-min').value);
-    const max = parseFloat(document.getElementById('price-max').value);
 
-    // Fetch of filter producten op prijs (ajax of frontend filtering)
-    fetch(`../pages/get_products.php?min_price=${min}&max_price=${max}`)
-        .then(response => response.json())
-        .then(products => {
-            const grid = document.getElementById('products-grid');
-            grid.innerHTML = '';
-            if (products.length === 0) {
-                grid.innerHTML = '<p style="text-align:center;">Geen producten gevonden.</p>';
-            } else {
-                products.forEach(product => {
-                    const div = document.createElement('div');
-                    div.classList.add('product-card');
-                    div.innerHTML = `
-                        <a href="product_detail.php?category=${product.category}&id=${product.id}">
-                            <img src="${product.image_url}" alt="${product.name}" />
-                            <div class="product-info">
-                                <h3>${product.name}</h3>
-                                <p>€${product.price.toFixed(2)}</p>
-                            </div>
-                        </a>
-                    `;
-                    grid.appendChild(div);
-                });
+// Functie voor fail message (niet ingelogd)
+function showFailMessage() {
+    const failMsg = document.getElementById("failMessage");
+    if (failMsg) {
+        failMsg.style.display = "block";
+        setTimeout(() => {
+            failMsg.style.display = "none";
+        }, 3000);
+    }
+}
+
+// Succes addded to cart message
+ document.addEventListener("DOMContentLoaded", function() {
+            const success = document.getElementById('successMessage');
+            if (success) {
+                success.style.display = 'block';
+                setTimeout(() => {
+                    success.style.display = 'none';
+                }, 3000);
+            }
+
+            window.showFailMessage = function() {
+                const fail = document.getElementById('failMessage');
+                if (fail) {
+                    fail.style.display = 'block';
+                    setTimeout(() => {
+                        fail.style.display = 'none';
+                    }, 3000);
+                }
             }
         });
-});
+
+        
