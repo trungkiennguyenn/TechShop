@@ -54,7 +54,7 @@
     margin-bottom: 30px;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .order-card h2 {
@@ -89,9 +89,6 @@
     background-color: #f9f9f9;
 }
 
-/* =========================
-   Productafbeelding in bestelling
-   ========================= */
 .order-img {
     width: 60px;
     height: 60px;
@@ -99,9 +96,6 @@
     border-radius: 6px;
 }
 
-/* =========================
-   Totaalbedrag
-   ========================= */
 .order-total {
     text-align: right;
     font-size: 1.1rem;
@@ -109,39 +103,3 @@
     margin-top: 10px;
 }
 
-/* =========================
-   Responsive weergave voor mobiel
-   ========================= */
-@media (max-width: 768px) {
-    .order-table, 
-    .order-table thead, 
-    .order-table tbody, 
-    .order-table th, 
-    .order-table td, 
-    .order-table tr {
-        display: block;
-    }
-
-    .order-table tr {
-        margin-bottom: 15px;
-    }
-
-    .order-table td {
-        text-align: right;
-        padding-left: 50%;
-        position: relative;
-    }
-
-    .order-table td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 15px;
-        width: calc(50% - 30px);
-        font-weight: bold;
-        text-align: left;
-    }
-
-    .order-table th {
-        display: none;
-    }
-}
