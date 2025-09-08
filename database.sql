@@ -8,6 +8,19 @@ USE project;
 -- Hoofdtabel per categorie
 -- ========================
 CREATE TABLE
+    IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(50) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+INSERT INTO
+    users (username, password)
+VALUES
+    ('admin', 'admin123');
+
+CREATE TABLE
     laptops (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -88,6 +101,27 @@ CREATE TABLE
         product_id INT NOT NULL,
         category VARCHAR(50) NOT NULL,
         image_url VARCHAR(255) NOT NULL
+    );
+
+-- Tabel voor bestellingen
+CREATE TABLE
+    orders (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    );
+
+-- Tabel voor orderregels
+CREATE TABLE
+    order_items (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        order_id INT NOT NULL,
+        category VARCHAR(50) NOT NULL,
+        product_id INT NOT NULL,
+        quantity INT NOT NULL DEFAULT 1,
+        price DECIMAL(10, 2) NOT NULL,
+        FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE
     );
 
 INSERT INTO
@@ -486,7 +520,7 @@ VALUES
         149.00,
         'https://m.media-amazon.com/images/G/01/kindle/journeys/WTN3CxScwzgi6KWIbtm8Xorm6sx50imat82FEiOH0xK83D/M2JiMjU1ZTYt._CB670552974_.jpg',
         '10.1" Full HD, octa-core, 3GB RAM.'
-    ),
+    ),  
     (
         'Lenovo Tab P11 Pro',
         499.00,
@@ -588,19 +622,3 @@ VALUES
     (10, 'Processor', 'Apple A15'),
     (10, 'RAM', '4 GB'),
     (10, 'Opslag', '64 GB');
-
--- ========================
--- Users tabel
--- ========================
-CREATE TABLE
-    IF NOT EXISTS users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(50) NOT NULL UNIQUE,
-        password VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-
-INSERT INTO
-    users (username, password)
-VALUES
-    ('admin', 'admin123');
