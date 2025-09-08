@@ -5,7 +5,7 @@
     width: 100%;
     height: 100%;
 
-    display: none; /* standaard verborgen */
+    display: none; 
     justify-content: center;
     align-items: center;
 
@@ -14,7 +14,7 @@
 }
 
 .modal.show {
-    display: flex; /* zichtbaar en gecentreerd */
+    display: flex; 
 }
 
 .modal-content {
