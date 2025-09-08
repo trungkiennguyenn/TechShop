@@ -23,6 +23,7 @@ $products = $stmt->fetchAll();
     <title>Admin - <?= ucfirst($category) ?> Beheer</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/modal.css">
 </head>
 
 <body>
