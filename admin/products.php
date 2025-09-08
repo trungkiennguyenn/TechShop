@@ -38,10 +38,8 @@ $products = $stmt->fetchAll();
         <a href="products.php?category=tablets">Tablets</a>
     </nav>
 
-    <!-- Delete Selected knop, standaard verborgen -->
     <button id="deleteSelectedBtn" data-category="<?= $category ?>" style="display:none;">🗑️ Delete Selected</button>
 
-    <!-- Succesmelding -->
     <div id="successMessage" class="success-message" style="display:none;">
         ✅ Product(en) succesvol verwijderd!
     </div>

@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'];
     $image_url = $_POST['image_url'];
     $description = $_POST['description'];
-    
+
     $update = $pdo->prepare("UPDATE $category SET name=?, price=?, image_url=?, description=? WHERE id=?");
     $update->execute([$name, $price, $image_url, $description, $id]);
 
